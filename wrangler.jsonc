@@ -10,7 +10,21 @@
 	"observability": {
 		"enabled": true
 	},
-	"upload_source_maps": true
+	"upload_source_maps": true,
+	"d1_databases": [
+		{
+			"binding": "bd_autos",
+			"database_name": "bd-autos",
+			"database_id": "eae76039-d27a-4a51-bd4a-f6202cd03f04",
+			"remote": false
+		}
+	],
+	"r2_buckets": [
+		{
+		"binding": "DATOS_BUCKET",
+		"bucket_name": "datos-autos"
+		}
+	]
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
