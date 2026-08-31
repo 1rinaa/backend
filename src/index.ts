@@ -1,5 +1,5 @@
 // src/index.ts
-import { importData } from '../scripts/import-data.js';
+//import { importData } from '../scripts/import-data.js';
 
 export interface Env {
     bd_autos: D1Database;
@@ -50,7 +50,7 @@ export default {
         }
 
         // Endpoint para importar datos
-        if (path === '/api/import-data' && method === 'POST') {
+        /*if (path === '/api/import-data' && method === 'POST') {
             try {
                 console.log('🚀 Iniciando importación de datos...');
                 await importData(env);
@@ -69,7 +69,7 @@ export default {
                     headers: { 'Content-Type': 'application/json', ...corsHeaders }
                 });
             }
-        }
+        }*/
 
         // Resto de tus endpoints
         try {
@@ -246,20 +246,23 @@ async function handleFabricantes(request: Request, env: Env, path: string, metho
         });
     }
 
-    if (method === 'PUT' && id) {
-        const body = await request.json() as FabricanteInput;
-        const { nombre, pais, anio_fundacion, sitio_web, logo } = body;
+   if (method === 'PUT' && id) {
+		const body = await request.json() as FabricanteInput;
+		const { nombre, pais, anio_fundacion, sitio_web, logo } = body;
 
-        await env.bd_autos.prepare(`
-            UPDATE fabricantes 
-            SET nombre = ?, pais = ?, anio_fundacion = ?, sitio_web = ?, logo = ?
-            WHERE id = ?
-        `).bind(nombre, pais, anio_fundacion, sitio_web, logo, parseInt(id)).run();
+		// Si logo no viene, usar null o vacío
+		const logoValue = logo || '';
 
-        return new Response(JSON.stringify({ message: 'Fabricante actualizado exitosamente' }), {
-            headers: { 'Content-Type': 'application/json', ...corsHeaders }
-        });
-    }
+		await env.bd_autos.prepare(`
+			UPDATE fabricantes 
+			SET nombre = ?, pais = ?, anio_fundacion = ?, sitio_web = ?, logo = ?
+			WHERE id = ?
+		`).bind(nombre, pais, anio_fundacion, sitio_web, logoValue, parseInt(id)).run();
+
+		return new Response(JSON.stringify({ message: 'Fabricante actualizado exitosamente' }), {
+			headers: { 'Content-Type': 'application/json', ...corsHeaders }
+		});
+	}
 
     if (method === 'DELETE' && id) {
         await env.bd_autos.prepare('DELETE FROM fabricantes WHERE id = ?').bind(parseInt(id)).run();
